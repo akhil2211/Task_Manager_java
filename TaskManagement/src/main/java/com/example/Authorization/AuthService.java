@@ -1,8 +1,5 @@
-package com.example.AuthFilter;
+package com.example.Authorization;
 
-import com.example.Controller.AuthenticationRequest;
-import com.example.Controller.AuthenticationResponse;
-import com.example.Controller.RegisterRequest;
 import com.example.Model.Organization;
 import com.example.Model.Token;
 import com.example.Model.TokenType;
