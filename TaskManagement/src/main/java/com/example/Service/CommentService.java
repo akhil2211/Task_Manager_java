@@ -6,6 +6,7 @@ import com.example.Model.User;
 import com.example.Repository.CommentRepo;
 import com.example.Repository.TaskRepo;
 import com.example.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 ;import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -16,9 +17,9 @@ import java.util.List;
 public class CommentService {
     private final CommentRepo commentRepo;
     private final UserRepository userRepository;
-
     private final TaskRepo taskRepo;
 
+    @Autowired
     public CommentService(CommentRepo commentRepo, UserRepository userRepository, TaskRepo taskRepo) {
         this.commentRepo = commentRepo;
         this.userRepository = userRepository;

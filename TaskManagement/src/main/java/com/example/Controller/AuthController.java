@@ -3,8 +3,6 @@ package com.example.Controller;
 
 import com.example.Authorization.AuthService;
 import com.example.Authorization.AuthenticationRequest;
-import com.example.Authorization.AuthenticationResponse;
-import com.example.Authorization.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +16,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     @Autowired
     private AuthService authService;
-
-    @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register (@RequestBody RegisterRequest registerRequest){
-        return ResponseEntity.ok(authService.register(registerRequest));
-   }
-    @PostMapping("/login")
-    public ResponseEntity<String> register (@RequestBody AuthenticationRequest registerRequest){
+        @PostMapping("/login")
+        public ResponseEntity<String> register (@RequestBody AuthenticationRequest registerRequest){
         return ResponseEntity.ok(authService.authenticate(registerRequest));
     }
 }

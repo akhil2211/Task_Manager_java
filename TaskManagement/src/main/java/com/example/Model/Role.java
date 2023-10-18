@@ -22,8 +22,8 @@ public class Role {
     private Integer id;
 
     @Column
-    @NonNull
-    private String role_title;
+    @Enumerated(EnumType.STRING)
+    private UserRoles roles;
 
     @OneToMany(mappedBy = "role")
     private List<User> users;

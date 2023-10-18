@@ -7,6 +7,8 @@ import com.example.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,26 +26,20 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/list")
-    public ResponseEntity <List<User>> getAllUsers() {
-            return ResponseEntity.ok(userService.getAllUsers());
-    }
-
     @GetMapping("/profile/{user_id}")
     public ResponseEntity<User> getUserDetails(@PathVariable Integer user_id){
         return ResponseEntity.ok(userService.getUserDetails(user_id));
     }
-
-    @GetMapping("/organization/{organization_id}")
-    public ResponseEntity<List<User>> findByOrganization(@PathVariable Integer organization_id) {
-        return new ResponseEntity<>(userService.getUserByOrganization(organization_id), HttpStatus.OK);
-
+    @GetMapping("/currentUser")
+    public ResponseEntity<Integer> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User userDetails = (User) authentication.getPrincipal();
+        Integer currentUserId = userDetails.getId();
+        return ResponseEntity.status(HttpStatus.CREATED).body(currentUserId);
     }
 
-
-
     @GetMapping("/{user_id}")
-        public ResponseEntity<User> getUserById(@PathVariable Integer user_id) {
+    public ResponseEntity<User> getUserById(@PathVariable Integer user_id) {
         User user = userService.getUserById(user_id);
         if (user != null)
         {
@@ -54,4 +50,15 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/list")
+    public ResponseEntity <List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @GetMapping("/organization/{organization_id}")
+    public ResponseEntity<List<User>> findByOrganization(@PathVariable Integer organization_id) {
+        return new ResponseEntity<>(userService.getUserByOrganization(organization_id), HttpStatus.OK);
+    }
+
+
 }

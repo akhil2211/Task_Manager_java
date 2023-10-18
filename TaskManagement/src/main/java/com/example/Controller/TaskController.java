@@ -59,26 +59,10 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.getTaskHistory(taskId));
     }
 
-    @PostMapping("/{taskId}/editTask")
-    public ResponseEntity<String> editTask(@PathVariable Integer taskId, @RequestBody Map<String,Integer> editRequest){
-        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.editTask(taskId,editRequest.get("newTaskHolderId")));
-    }
+
     @PostMapping("/{taskId}/editTaskStatus")
     public  ResponseEntity<String> editTaskStatus(@PathVariable Integer taskId,@RequestBody Map<String,String> changeRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.editTaskStatus(taskId,changeRequest.get("newTaskStatus")));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createTask(@RequestBody TaskRequest taskRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskRequest));
-    }
-
-    @GetMapping("/currentUser")
-    public ResponseEntity<Integer> getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User userDetails = (User) authentication.getPrincipal();
-        Integer currentUserId = userDetails.getId();
-        return ResponseEntity.status(HttpStatus.CREATED).body(currentUserId);
-
-    }
 }

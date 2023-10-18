@@ -1,10 +1,8 @@
 package com.example.Authorization;
 
-import com.example.Model.Organization;
-import com.example.Model.Token;
-import com.example.Model.TokenType;
-import com.example.Model.User;
+import com.example.Model.*;
 import com.example.Repository.OrganizationRepo;
+import com.example.Repository.RoleRepo;
 import com.example.Repository.TokenRepo;
 import com.example.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,53 +22,27 @@ public class AuthService {
 
     private final UserRepository userRepository;
 
-    private final  PasswordEncoder passwordEncoder;
-
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
     public final AuthenticationManager authenticationManager;
 
     private final OrganizationRepo organizationRepo;
 
     private final TokenRepo tokenRepo;
+
+    private final RoleRepo roleRepo;
     @Autowired
-    public  AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, OrganizationRepo organizationRepo, TokenRepo tokenRepo){
+    public  AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, OrganizationRepo organizationRepo, TokenRepo tokenRepo, RoleRepo roleRepo){
         this.userRepository=userRepository;
         this.passwordEncoder=passwordEncoder;
         this.jwtService=jwtService;
         this.authenticationManager=authenticationManager;
         this.organizationRepo = organizationRepo;
         this.tokenRepo = tokenRepo;
+        this.roleRepo = roleRepo;
     }
-    public AuthenticationResponse register(RegisterRequest registerRequest) {
-        User user= new User();
-        user.setFirstname(registerRequest.getFirstname());
-        user.setLastname(registerRequest.getLastname());
-        user.setUsername(registerRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setEmail(registerRequest.getEmail());
-        user.setCreated_at(Timestamp.valueOf(LocalDateTime.now()));
-        Organization organization=organizationRepo.findById(registerRequest.getOrgId()).orElse(null);
-        user.setOrganization(organization);
 
-        var savedUser= userRepository.save(user);
-        var jwtToken=jwtService.generateToken(user);
-        revokeAllTokens(user);
-        saveUserToken(user,jwtToken);
-        return AuthenticationResponse.builder().jwt(jwtToken).build();
-    }
-    private void revokeAllTokens(User user){
-     var validToken=tokenRepo.findAllValidTokensByUser(user.getId());
-     if(validToken.isEmpty())
-         return;
-     validToken.forEach(t -> {
-         t.setRevoked(true);
-         t.setExpired(true);
-     });
-         tokenRepo.saveAll(validToken);
-
-
-    }
     private void saveUserToken(User user, String jwtToken) {
         Token token=new Token();
         token.setUser(user);
@@ -79,6 +51,17 @@ public class AuthService {
         token.setExpired(false);
         token.setRevoked(false);
         tokenRepo.save(token);
+    }
+
+    private void revokeAllTokens(User user){
+        var validToken=tokenRepo.findAllValidTokensByUser(user.getId());
+        if(validToken.isEmpty())
+            return;
+        validToken.forEach(t -> {
+            t.setRevoked(true);
+            t.setExpired(true);
+        });
+        tokenRepo.saveAll(validToken);
     }
 
     public String authenticate(AuthenticationRequest registerRequest) {

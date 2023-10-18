@@ -41,35 +41,18 @@ public class ProjectController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PostMapping("/{projectId}/assign")
-         public ResponseEntity<String> assignProjectToUser(@RequestBody Map<String,List<Integer>> assignRequest,@PathVariable Integer projectId){
-         return new ResponseEntity<>(projectService.assignProject(projectId,assignRequest.get("userIds")),HttpStatus.OK);
-    }
 
-    @GetMapping("/organization/{organization_id}")
-    public ResponseEntity<List<Map<String, Object>>> findProjectByOrganization(@PathVariable Integer organization_id) {
-        return new ResponseEntity<>(projectService.getProjectByOrganization(organization_id), HttpStatus.OK);
 
-    }
+
     @GetMapping("{projectId}/userlist")
     public ResponseEntity<List<String>> findByProject(@PathVariable Integer projectId) {
         return new ResponseEntity<>(projectService.getUserByProject(projectId), HttpStatus.OK);
 
     }
-    @GetMapping("/{projStatus}/ProjectStatus")
-    public ResponseEntity<List<Project>> getProjectbyStatus(@PathVariable String projStatus) {
-        return new ResponseEntity<>(projectService.getProjectbyStatus(projStatus),HttpStatus.OK);
-    }
+
     @PostMapping("/{projectId}/editProjectStatus")
     public  ResponseEntity<String> editProjectStatus(@PathVariable Integer projectId,@RequestBody Map<String,String> changeStatusRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.editProjectStatus(projectId,changeStatusRequest.get("newProjectStatus")));
     }
 
-    @PostMapping("/{orgId}/create")
-    public ResponseEntity<String> createProject(@RequestBody Project project,@PathVariable Integer orgId)
-    {
-        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(project,orgId));
-
-
-    }
 }

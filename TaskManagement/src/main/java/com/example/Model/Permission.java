@@ -7,18 +7,23 @@ import lombok.RequiredArgsConstructor;
 
 public enum Permission {
 
-    ADMIN_ADDMANAGER("admin:addManager"),
-    ADMIN_VIEWUSERS("admin:viewUsers"),
-    GM_VIEWTEAM("gm:viewTeam"),
-    GM_ADDPM("gm:addPm"),
-    GM_ASSIGNPROJECT("gm:assignProject"),
+    ADMIN_READ("admin:read"),
+    ADMIN_UPDATE("admin:update"),
+    ADMIN_CREATE("admin:create"),
+    ADMIN_DELETE("admin:delete"),
 
-    PM_ADDMEMBER("pm:addMember"),
+    GM_READ("gm:read"),
+    GM_UPDATE("gm:update"),
+    GM_CREATE("gm:create"),
+    GM_DELETE("gm:delete"),
 
-    PM_ASSIGNTASK("pm:assignTask");
+    PM_READ("pm:read"),
+    PM_UPDATE("pm:update"),
+    PM_CREATE("pm:create"),
+    PM_DELETE("pm:delete")
 
-
-
+;
     @Getter
     private  final String permission;
+
 }

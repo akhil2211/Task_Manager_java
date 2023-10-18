@@ -1,4 +1,4 @@
-package com.example.Authorization;
+package com.example.Model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,5 +17,6 @@ public class RegisterRequest {
     private String password;
     private String email;
     private Integer orgId;
+    private Integer roleId;
 
 }

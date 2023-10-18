@@ -28,7 +28,6 @@ public class CommentController {
         return commentService.findTaskComments(taskid);
     }
     @DeleteMapping("/delete/{id}")
-
     public String deleteComment(@PathVariable Integer id) {
         commentService.deleteComment(id);
         return "Comment Deleted";
