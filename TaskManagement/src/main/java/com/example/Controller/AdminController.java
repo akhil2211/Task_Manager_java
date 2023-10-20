@@ -5,6 +5,7 @@ import com.example.Model.RegisterRequest;
 import com.example.Model.User;
 import com.example.Service.AdminService;
 import com.example.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class AdminController {
         this.userService = userService;
     }
     @PostMapping("/register")
-    public ResponseEntity<User> register (@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<User> register (@RequestBody @Valid RegisterRequest registerRequest){
         return ResponseEntity.ok(adminService.register(registerRequest));
     }
     @PostMapping("/createOrganization")

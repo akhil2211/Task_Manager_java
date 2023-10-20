@@ -16,6 +16,7 @@ public class RegisterRequest {
     @NotNull
     @NotEmpty
     private String firstname;
+
     private String lastname;
 
     @NotNull
@@ -29,7 +30,12 @@ public class RegisterRequest {
     @NotNull
     @NotEmpty
     private String email;
+
+    @NotNull
+
     private Integer orgId;
+
+    @NotNull
     private Integer roleId;
 
 }

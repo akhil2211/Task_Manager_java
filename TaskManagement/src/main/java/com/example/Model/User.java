@@ -29,28 +29,21 @@ public class User implements UserDetails
     private Integer id;
 
     @Column
-
-    @NotNull
-    @NotEmpty
     private String firstname;
 
     @Column
     private String lastname;
 
     @Column
-    @NonNull
     private String username;
 
     @Column
-    @NonNull
     private String password;
 
     @Column
-    @NonNull
     private String email;
 
     @Column
-    @NonNull
     private Timestamp created_at;
 
     @Column
