@@ -2,6 +2,8 @@ package com.example.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +29,9 @@ public class User implements UserDetails
     private Integer id;
 
     @Column
-    @NonNull
+
+    @NotNull
+    @NotEmpty
     private String firstname;
 
     @Column

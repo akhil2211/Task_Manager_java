@@ -2,10 +2,7 @@ package com.example.Service;
 
 import com.example.Authorization.JwtService;
 import com.example.Model.*;
-import com.example.Repository.OrganizationRepo;
-import com.example.Repository.RoleRepo;
-import com.example.Repository.TokenRepo;
-import com.example.Repository.UserRepository;
+import com.example.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,19 +20,16 @@ public class AdminService {
     private final RoleRepo roleRepo;
     private final UserRepository userRepository;
 
-    private final TokenRepo tokenRepo;
+    private final PriorityRepo priorityRepo;
 
-    private final JwtService jwtService;
-
-    @Autowired
-    public AdminService(OrganizationRepo organizationRepo, PasswordEncoder passwordEncoder, RoleRepo roleRepo, UserRepository userRepository, TokenRepo tokenRepo, JwtService jwtService) {
+       @Autowired
+      public AdminService(OrganizationRepo organizationRepo, PasswordEncoder passwordEncoder, RoleRepo roleRepo, UserRepository userRepository, TokenRepo tokenRepo, JwtService jwtService, PriorityRepo priorityRepo) {
         this.organizationRepo = organizationRepo;
         this.passwordEncoder = passwordEncoder;
         this.roleRepo = roleRepo;
         this.userRepository = userRepository;
-        this.tokenRepo = tokenRepo;
-        this.jwtService = jwtService;
-    }
+        this.priorityRepo = priorityRepo;
+       }
 
 
       public User register(RegisterRequest registerRequest) {
@@ -62,4 +56,11 @@ public class AdminService {
         organizationRepo.save(organization);
         return "Organization Added";
     }
+    public String createPriority(Map<String,String> priorityRequest) {
+        Priority priority =new Priority();
+        priority.setType(priorityRequest.get("priority"));
+        priorityRepo.save(priority);
+        return "Priority Created";
+       }
+
 }

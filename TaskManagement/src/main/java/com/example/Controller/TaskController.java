@@ -2,14 +2,10 @@ package com.example.Controller;
 
 import com.example.Model.Task;
 import com.example.Model.TaskRequest;
-import com.example.Model.User;
 import com.example.Service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +24,10 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<String> createTask(@RequestBody TaskRequest taskRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskRequest));
+    }
     @GetMapping("/list")
     public ResponseEntity<Iterable<Task>> getAllTasks() {
         return ResponseEntity.ok(taskService.getAllTasks());
@@ -54,12 +54,23 @@ public class TaskController {
     public ResponseEntity<List<Task>> getTaskbyStatus(@PathVariable String t_status) {
         return new ResponseEntity<>(taskService.getTaskbyStatus(t_status),HttpStatus.OK);
     }
+    @GetMapping("/{t_assignee}/AssignedTasks")
+    public ResponseEntity<List<Task>> getTaskbyAssignee(@PathVariable Integer t_assignee) {
+        return new ResponseEntity<>(taskService.getTaskbyAssignee(t_assignee),HttpStatus.OK);
+    }
+    @GetMapping("/{t_assigned}/MyTasks")
+    public ResponseEntity<List<Task>> getTaskbyAssigned(@PathVariable Integer t_assigned) {
+        return new ResponseEntity<>(taskService.getTaskbyAssigned(t_assigned),HttpStatus.OK);
+    }
+
     @GetMapping("/{taskId}/taskHistory")
     public ResponseEntity<List<String>> getTaskHistory(@PathVariable Integer taskId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.getTaskHistory(taskId));
     }
-
-
+    @PostMapping("/{taskId}/editTask")
+    public ResponseEntity<String> editTask(@PathVariable Integer taskId, @RequestBody Map<String,Integer> editRequest){
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.editTask(taskId,editRequest.get("newTaskHolderId")));
+    }
     @PostMapping("/{taskId}/editTaskStatus")
     public  ResponseEntity<String> editTaskStatus(@PathVariable Integer taskId,@RequestBody Map<String,String> changeRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.editTaskStatus(taskId,changeRequest.get("newTaskStatus")));

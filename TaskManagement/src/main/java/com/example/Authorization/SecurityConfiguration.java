@@ -16,9 +16,6 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import static com.example.Model.Permission.*;
 import static com.example.Model.UserRoles.*;
 
-//import static com.example.Model.Permission.ADMIN_VIEWUSERS;
-//import static com.example.Model.Permission.GM_VIEWTEAM;
-//import static com.example.Model.UserRoles.*;
 
 @Configuration
 @EnableWebSecurity
@@ -36,22 +33,27 @@ public class SecurityConfiguration {
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/admin/***").hasRole(ADMIN.name())
-                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/***").hasAnyAuthority(ADMIN_READ.name())
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/admin/***").hasAnyAuthority(ADMIN_UPDATE.name())
-                        .requestMatchers(HttpMethod.POST, "/api/v1/admin/***").hasAnyAuthority(ADMIN_CREATE.name())
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/***").hasAnyAuthority(ADMIN_DELETE.name())
-                        .requestMatchers("/api/v1/gm/***").hasRole(GM.name())
-                        .requestMatchers(HttpMethod.GET, "/api/v1/gm/***").hasAnyAuthority(GM_READ.name())
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/gm/***").hasAnyAuthority(GM_UPDATE.name())
-                        .requestMatchers(HttpMethod.POST, "/api/v1/gm/***").hasAnyAuthority(GM_CREATE.name())
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/gm/***").hasAnyAuthority(GM_DELETE.name())
-                        .requestMatchers("/api/v1/pm/***").hasRole(PM.name())
-                        .requestMatchers(HttpMethod.GET, "/api/v1/pm/***").hasAnyAuthority(PM_READ.name())
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/pm/***").hasAnyAuthority(PM_UPDATE.name())
-                        .requestMatchers(HttpMethod.POST, "/api/v1/pm/***").hasAnyAuthority(PM_CREATE.name())
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/pm/***").hasAnyAuthority(PM_DELETE.name())
+                        .requestMatchers("/api/v1/admin/**").hasRole(ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAuthority(ADMIN_READ.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
+                        .requestMatchers("/api/v1/gm/**").hasRole(GM.name())
+                        .requestMatchers(HttpMethod.GET, "/api/v1/gm/**").hasAuthority(GM_READ.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/gm/**").hasAuthority(GM_UPDATE.name())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/gm/**").hasAuthority(GM_CREATE.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/gm/**").hasAuthority(GM_DELETE.name())
+                        .requestMatchers("/api/v1/pm/**").hasRole(PM.name())
+                        .requestMatchers(HttpMethod.GET, "/api/v1/pm/**").hasAuthority(PM_READ.name())
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/pm/**").hasAuthority(PM_UPDATE.name())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/pm/**").hasAuthority(PM_CREATE.name())
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/pm/**").hasAuthority(PM_DELETE.name())
+                        .requestMatchers("/api/v1/project/task/create").hasAnyRole(PM.name(),GM.name())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/project/task/create").hasAnyAuthority(PM_CREATE.name(), GM_CREATE.name())
+                        .requestMatchers("/api/v1/project/task/{taskId}/editTask").hasAnyRole(PM.name(),GM.name())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/project/{taskId}/editTask").hasAnyAuthority(PM_CREATE.name(), GM_CREATE.name())
                         .anyRequest().authenticated()
+
                 ).sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout.addLogoutHandler(logoutHandler)
@@ -59,7 +61,6 @@ public class SecurityConfiguration {
                         .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()))
 
                 ;
-
 
         return httpSecurity.build();
 
