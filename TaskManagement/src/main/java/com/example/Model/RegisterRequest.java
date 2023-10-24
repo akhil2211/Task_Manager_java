@@ -1,7 +1,7 @@
 package com.example.Model;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import com.example.CustomValidator.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,29 +13,35 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class RegisterRequest {
-    @NotNull
-    @NotEmpty
+
+    @StringValid
     private String firstname;
 
+    @StringValid
     private String lastname;
-
-    @NotNull
-    @NotEmpty
+    //
+//    @NotNull
+//    @NotEmpty
+//    @Size(min=4,max = 10,message = "Username must be atleast 4 characters and atmax 10 characters")
+    @FieldLengthValid
     private String username;
-
-    @NotNull
-    @NotEmpty
+    //
+//    @NotNull
+//    @NotEmpty
+//    @Pattern(regexp = "(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}",message="Password must contain minimum 8 and maximum 10 characters, at least one uppercase letter, one lowercase letter, one number and one special character")
+    @PasswordValid
     private String password;
 
-    @NotNull
-    @NotEmpty
+    //    @NotNull
+//    @NotEmpty
+//    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",flags = Pattern.Flag.CASE_INSENSITIVE,message = "Invalid email")
+    @EmailValid
     private String email;
 
-    @NotNull
+    @Numeric
+    private String orgId;
 
-    private Integer orgId;
-
-    @NotNull
-    private Integer roleId;
+    @Numeric
+    private String roleId;
 
 }

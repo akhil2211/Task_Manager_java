@@ -40,9 +40,9 @@ public class AdminService {
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setEmail(registerRequest.getEmail());
         user.setCreated_at(Timestamp.valueOf(LocalDateTime.now()));
-        Role role= roleRepo.findById(registerRequest.getRoleId()).orElse(null);
+        Role role= roleRepo.findById(Integer.valueOf(registerRequest.getRoleId())).orElse(null);
         user.setRole(role);
-        Organization organization=organizationRepo.findById(registerRequest.getOrgId()).orElse(null);
+        Organization organization=organizationRepo.findById(Integer.valueOf(registerRequest.getOrgId())).orElse(null);
         user.setOrganization(organization);
 
         var savedUser= userRepository.save(user);
