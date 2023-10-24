@@ -20,6 +20,7 @@ public class GmService {
 
     private final OrgProjectRepo orgProjectRepo;
     private final OrganizationRepo organizationRepo;
+
     @Autowired
     public GmService(ProjectRepo projectRepo, UserRepository userRepository, ProjectUserRepo projectUserRepo, OrgProjectRepo orgProjectRepo, OrganizationRepo organizationRepo) {
         this.projectRepo = projectRepo;
@@ -28,6 +29,8 @@ public class GmService {
         this.orgProjectRepo = orgProjectRepo;
         this.organizationRepo = organizationRepo;
     }
+
+
     public String assignProject(Integer projectId, List<Integer> userIds) {
         Project project=projectRepo.findById(projectId).orElse(null);
         if(project!=null){
@@ -45,7 +48,9 @@ public class GmService {
             return "No Project Found !";
         }
     }
-
+    public Iterable<Project> getAllProjects() {
+        return projectRepo.findAll();
+    }
     public String createProject(Project project, Integer orgId) {
         Project projectdata=new Project();
         projectdata.setProject_code(project.getProject_code());

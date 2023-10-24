@@ -23,11 +23,7 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<Iterable<Project>> getAllProjects() {
-        Iterable<Project> projects = projectService.getAllProjects();
-        return ResponseEntity.ok(projects);
-    }
+
     @GetMapping("/{project_id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Integer project_id) {
         Project project = projectService.getProjectById(project_id);

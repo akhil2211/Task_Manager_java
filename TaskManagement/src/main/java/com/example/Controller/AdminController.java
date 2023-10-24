@@ -2,7 +2,6 @@ package com.example.Controller;
 
 import com.example.Authorization.AuthService;
 import com.example.Model.RegisterRequest;
-import com.example.Model.User;
 import com.example.Service.AdminService;
 import com.example.Service.UserService;
 import jakarta.validation.Valid;
@@ -30,12 +29,12 @@ public class AdminController {
         this.userService = userService;
     }
     @PostMapping("/register")
-    public ResponseEntity<User> register (@RequestBody @Valid RegisterRequest registerRequest){
+    public ResponseEntity<ResponseEntity<Object>> register (@RequestBody @Valid RegisterRequest registerRequest){
         return ResponseEntity.ok(adminService.register(registerRequest));
     }
     @PostMapping("/createOrganization")
     public ResponseEntity<String> createOrganziation(@RequestBody Map<String,String> orgRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createOrganziation(orgRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createOrganization(orgRequest));
     }
     @PostMapping("/createPriority")
     public ResponseEntity<String> createPriority(@RequestBody Map<String,String> priorityRequest) {

@@ -15,17 +15,19 @@ import lombok.NoArgsConstructor;
 public class RegisterRequest {
 
     @StringValid
+    @FieldLengthValid
+    @NotBlank(message = "Empty field!")
     private String firstname;
 
     @StringValid
     private String lastname;
-    //
+
 //    @NotNull
 //    @NotEmpty
 //    @Size(min=4,max = 10,message = "Username must be atleast 4 characters and atmax 10 characters")
     @FieldLengthValid
     private String username;
-    //
+
 //    @NotNull
 //    @NotEmpty
 //    @Pattern(regexp = "(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}",message="Password must contain minimum 8 and maximum 10 characters, at least one uppercase letter, one lowercase letter, one number and one special character")

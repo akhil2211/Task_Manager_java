@@ -7,9 +7,15 @@ public class EmailValidation implements ConstraintValidator<EmailValid,String> {
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        if (email == null) {
+        String mail=email.toLowerCase();
+
+        String emailid=email.trim();
+        if (emailid.isBlank()) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("Field cannot be null").addConstraintViolation();
             return false;
         }
-        return email.matches("[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}");
+
+        return mail.matches("[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}");
     }
 }

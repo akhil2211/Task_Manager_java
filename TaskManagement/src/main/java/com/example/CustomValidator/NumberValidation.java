@@ -7,9 +7,12 @@ public class NumberValidation implements ConstraintValidator<Numeric,String> {
 
     @Override
     public boolean isValid(String fieldValue, ConstraintValidatorContext constraintValidatorContext) {
-        if(fieldValue==null){
-            return false;}
-
+        String value=fieldValue.trim();
+        if (value.isBlank()) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("Field cannot be null").addConstraintViolation();
+            return false;
+        }
         try {
             Double.parseDouble(fieldValue);
             return true;}

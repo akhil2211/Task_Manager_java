@@ -21,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, Integer>
 
   @Query(value = "select* from user", nativeQuery = true)
   List<User> findAllUsers();
+  boolean existsByEmail(String email);
+  boolean existsByUsername(String username);
 }
