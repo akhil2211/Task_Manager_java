@@ -30,12 +30,13 @@ public class UserController {
     public ResponseEntity<User> getUserDetails(@PathVariable Integer user_id){
         return ResponseEntity.ok(userService.getUserDetails(user_id));
     }
-    @GetMapping("/currentUser")
-    public ResponseEntity<Integer> getCurrentUser() {
+    @GetMapping("/currentUserProfile")
+    public ResponseEntity<User> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User userDetails = (User) authentication.getPrincipal();
         Integer currentUserId = userDetails.getId();
-        return ResponseEntity.status(HttpStatus.CREATED).body(currentUserId);
+        userDetails.setPassword("");
+        return ResponseEntity.status(HttpStatus.OK).body(userDetails);
     }
 
     @GetMapping("/{user_id}")

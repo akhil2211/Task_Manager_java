@@ -37,9 +37,6 @@ public class ProjectController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
     @GetMapping("{projectId}/userlist")
     public ResponseEntity<List<String>> findByProject(@PathVariable Integer projectId) {
         return new ResponseEntity<>(projectService.getUserByProject(projectId), HttpStatus.OK);

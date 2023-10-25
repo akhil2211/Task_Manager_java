@@ -23,4 +23,7 @@ public interface UserRepository extends JpaRepository<User, Integer>
   List<User> findAllUsers();
   boolean existsByEmail(String email);
   boolean existsByUsername(String username);
+
+  @Query(value="select roles from role r inner join user u on r.id=u.role_id where u.id=?",nativeQuery = true)
+  String getUserRole(Integer userId);
 }

@@ -21,29 +21,19 @@ public class AdminService {
     private final RoleRepo roleRepo;
     private final UserRepository userRepository;
     private final PriorityRepo priorityRepo;
-
+    private final CategoryRepo categoryRepo;
     @Autowired
-    public AdminService(OrganizationRepo organizationRepo, PasswordEncoder passwordEncoder, RoleRepo roleRepo, UserRepository userRepository, PriorityRepo priorityRepo) {
+    public AdminService(OrganizationRepo organizationRepo, PasswordEncoder passwordEncoder, RoleRepo roleRepo, UserRepository userRepository, PriorityRepo priorityRepo, CategoryRepo categoryRepo) {
         this.organizationRepo = organizationRepo;
         this.passwordEncoder = passwordEncoder;
         this.roleRepo = roleRepo;
         this.userRepository = userRepository;
         this.priorityRepo = priorityRepo;
+        this.categoryRepo = categoryRepo;
     }
 
     public ResponseEntity<Object> register(RegisterRequest registerRequest) {
         try {
-            User user = new User();
-            user.setFirstname(registerRequest.getFirstname());
-            user.setLastname(registerRequest.getLastname());
-            user.setUsername(registerRequest.getUsername());
-            user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-            user.setEmail(registerRequest.getEmail());
-            user.setCreated_at(Timestamp.valueOf(LocalDateTime.now()));
-            Role role = roleRepo.findById(Integer.valueOf(registerRequest.getRoleId())).orElse(null);
-            user.setRole(role);
-            Organization organization = organizationRepo.findById(Integer.valueOf(registerRequest.getOrgId())).orElse(null);
-            user.setOrganization(organization);
 
             if (userRepository.existsByEmail(registerRequest.getEmail()) && userRepository.existsByUsername(registerRequest.getUsername())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -57,6 +47,17 @@ public class AdminService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Duplicate entry for username. This username already exists.");
             }
+            User user = new User();
+            user.setFirstname(registerRequest.getFirstname());
+            user.setLastname(registerRequest.getLastname());
+            user.setUsername(registerRequest.getUsername());
+            user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+            user.setEmail(registerRequest.getEmail());
+            user.setCreated_at(Timestamp.valueOf(LocalDateTime.now()));
+            Role role = roleRepo.findById(Integer.valueOf(registerRequest.getRoleId())).orElse(null);
+            user.setRole(role);
+            Organization organization = organizationRepo.findById(Integer.valueOf(registerRequest.getOrgId())).orElse(null);
+            user.setOrganization(organization);
 
             var savedUser = userRepository.save(user);
             return ResponseEntity.ok(savedUser);
@@ -79,5 +80,11 @@ public class AdminService {
         priority.setType(priorityRequest.get("type"));
         priorityRepo.save(priority);
         return "Priority Created";
+    }
+    public String createCategory(Map<String, String> categoryRequest) {
+        Category category = new Category();
+        category.setC_name(categoryRequest.get("Category"));
+        categoryRepo.save(category);
+        return "Task Category Created !";
     }
 }

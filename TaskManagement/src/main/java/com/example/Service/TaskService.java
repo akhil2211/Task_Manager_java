@@ -9,6 +9,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TaskService {
@@ -42,6 +43,29 @@ public class TaskService {
     }
 
     public String editTask(Integer newTaskId, Integer taskHolderId) {
+        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer currentUserId = userDetails.getId();
+        String currentUserRole=userRepository.getUserRole(currentUserId);
+        String userRole=userRepository.getUserRole(taskHolderId);
+        if(UserRoles.GM.toString().equals(currentUserRole)){
+
+            if(UserRoles.GM.toString().equals(userRole)|| UserRoles.ADMIN.toString().equals(userRole)){
+                return "GM Cannot assign task to GM or Admin !";
+            }else {
+                changeTaskHolder(newTaskId,taskHolderId);
+            }
+        }else{
+            if(UserRoles.PM.toString().equals(userRole) || UserRoles.GM.toString().equals(userRole) || UserRoles.ADMIN.toString().equals(userRole)){
+                return "PM Cannot assign task to GM or Admin !";
+            }else{
+                changeTaskHolder(newTaskId,taskHolderId);
+            }
+        }
+
+        return "Task Edited";
+    }
+
+    private void changeTaskHolder(Integer newTaskId, Integer taskHolderId) {
         Task task= taskRepo.findById(newTaskId).orElse(null);
         User user=userRepository.findById(taskHolderId).orElse(null);
         TaskHistory taskHistory=new TaskHistory();
@@ -52,11 +76,32 @@ public class TaskService {
         taskHistoryRepo.save(taskHistory);
         assignment.setAssigned_to(user);
         assignmentRepo.save(assignment);
-        return "Task Edited";
-
     }
+
     public String createTask(TaskRequest task) {
-        
+        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer currentUserId = userDetails.getId();
+
+        String currentUserRole=userRepository.getUserRole(currentUserId);
+        String userRole=userRepository.getUserRole(task.getAssignedto());
+        if(UserRoles.GM.toString().equals(currentUserRole)){
+
+            if(UserRoles.GM.toString().equals(userRole)|| UserRoles.ADMIN.toString().equals(userRole)){
+                return "GM Cannot assign task to GM or Admin !";
+            }else {
+                makeTask(task,currentUserId);
+            }
+        }else{
+            if(UserRoles.PM.toString().equals(userRole) || UserRoles.GM.toString().equals(userRole) || UserRoles.ADMIN.toString().equals(userRole)){
+                return "PM Cannot assign task to GM or Admin !";
+            }else{
+                makeTask(task,currentUserId);
+            }
+        }
+        return "Task Created Successfully";
+    }
+
+    private void makeTask(TaskRequest task, Integer currentUserId) {
         Task taskdata = new Task();
         taskdata.setT_code(task.getT_code());
         taskdata.setT_title(task.getT_title());
@@ -68,15 +113,11 @@ public class TaskService {
         taskdata.setProject(project);
         taskRepo.save(taskdata);
 
-
         Assignment assignment = new Assignment();
         User assignto = userRepository.findById(task.getAssignedto()).orElse(null);
         assignment.setAssigned_to(assignto);
-
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer currentUserId = userDetails.getId();
-
         User assignee = userRepository.findById(currentUserId).orElse(null);
+
         assignment.setAssignee_id(assignee);
         assignment.setTask(taskdata);
         assignmentRepo.save(assignment);
@@ -93,8 +134,6 @@ public class TaskService {
         taskPriority.setTask(taskdata);
         taskPriority.setPriority(prior);
         taskPriorityRepo.save(taskPriority);
-
-        return "Task Created Successfully";
     }
 
     public Iterable<Task> getAllTasks() {
@@ -119,11 +158,16 @@ public class TaskService {
         return taskRepo.findByTaskStatus(tStatus);
     }
 
-    public List<Task> getTaskbyAssignee(Integer tAssignee) {
-        return taskRepo.findByAssignee(tAssignee);
+    public List<Task> getTaskbyAssignee() {
+        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer currentUserId = userDetails.getId();
+
+        return taskRepo.findByAssignee(currentUserId);
     }
-    public List<Task> getTaskbyAssigned(Integer tAssigned) {
-        return taskRepo.findByAssigned(tAssigned);
+    public List<Task> getTaskbyAssigned() {
+        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer currentUserId = userDetails.getId();
+        return taskRepo.findByAssigned(currentUserId);
     }
 
     public String editTaskStatus(Integer taskId, String newTaskStatus) {
@@ -133,4 +177,5 @@ public class TaskService {
         taskRepo.save(task);
         return "Task Status Changed";
     }
+
 }

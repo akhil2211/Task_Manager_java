@@ -15,7 +15,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/project/task")
 public class TaskController {
-
     private final TaskService taskService;
 
     @Autowired
@@ -54,13 +53,13 @@ public class TaskController {
     public ResponseEntity<List<Task>> getTaskbyStatus(@PathVariable String t_status) {
         return new ResponseEntity<>(taskService.getTaskbyStatus(t_status),HttpStatus.OK);
     }
-    @GetMapping("/{t_assignee}/AssignedTasks")
-    public ResponseEntity<List<Task>> getTaskbyAssignee(@PathVariable Integer t_assignee) {
-        return new ResponseEntity<>(taskService.getTaskbyAssignee(t_assignee),HttpStatus.OK);
+    @GetMapping("/AssignedTasks")
+    public ResponseEntity<List<Task>> getTaskbyAssignee() {
+        return new ResponseEntity<>(taskService.getTaskbyAssignee(),HttpStatus.OK);
     }
-    @GetMapping("/{t_assigned}/MyTasks")
-    public ResponseEntity<List<Task>> getTaskbyAssigned(@PathVariable Integer t_assigned) {
-        return new ResponseEntity<>(taskService.getTaskbyAssigned(t_assigned),HttpStatus.OK);
+    @GetMapping("/MyTasks")
+    public ResponseEntity<List<Task>> getTaskbyAssigned() {
+        return new ResponseEntity<>(taskService.getTaskbyAssigned(),HttpStatus.OK);
     }
 
     @GetMapping("/{taskId}/taskHistory")
@@ -75,5 +74,6 @@ public class TaskController {
     public  ResponseEntity<String> editTaskStatus(@PathVariable Integer taskId,@RequestBody Map<String,String> changeRequest){
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.editTaskStatus(taskId,changeRequest.get("newTaskStatus")));
     }
+
 
 }

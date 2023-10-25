@@ -52,8 +52,10 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/v1/project/task/create").hasAnyAuthority(PM_CREATE.name(), GM_CREATE.name())
                         .requestMatchers("/api/v1/project/task/{taskId}/editTask").hasAnyRole(PM.name(),GM.name())
                         .requestMatchers(HttpMethod.POST, "/api/v1/project/{taskId}/editTask").hasAnyAuthority(PM_CREATE.name(), GM_CREATE.name())
-//                        .requestMatchers("/api/v1/gm/{projectId}/assign").hasRole(GM.name())
-//                        .requestMatchers(HttpMethod.POST, "/api/v1/gm/{projectId}/assign").hasAuthority(GM_CREATE.name())
+                        .requestMatchers("/api/v1/project/{projectId}/editProjectStatus").hasAnyRole(GM.name(), PM.name())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/project/{projectId}/editProjectStatus").hasAnyAuthority(GM_CREATE.name(), PM_CREATE.name())
+                        .requestMatchers("/api/v1/project/task/{taskId}/editTask").hasAnyRole(GM.name(), PM.name())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/project/task/{taskId}/editTask").hasAnyAuthority(GM_CREATE.name(), PM_CREATE.name()) 
                         .anyRequest().authenticated()
 
                 ).sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

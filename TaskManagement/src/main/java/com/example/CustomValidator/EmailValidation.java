@@ -9,7 +9,7 @@ public class EmailValidation implements ConstraintValidator<EmailValid,String> {
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
         String mail=email.toLowerCase();
 
-        String emailid=email.trim();
+        String emailid=mail.trim();
         if (emailid.isBlank()) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("Field cannot be null").addConstraintViolation();

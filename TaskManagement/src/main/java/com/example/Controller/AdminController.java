@@ -40,5 +40,9 @@ public class AdminController {
     public ResponseEntity<String> createPriority(@RequestBody Map<String,String> priorityRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createPriority(priorityRequest));
     }
+    @PostMapping("/createCategory")
+    public ResponseEntity<String> createCategory(@RequestBody Map<String, String> categoryRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createCategory(categoryRequest));
+    }
 
 }
