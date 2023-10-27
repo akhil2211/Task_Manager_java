@@ -2,6 +2,9 @@ package com.example.Service;
 
 import com.example.Model.*;
 import com.example.Repository.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
+
 public class AdminService {
 
     private final OrganizationRepo organizationRepo;
@@ -22,7 +26,7 @@ public class AdminService {
     private final UserRepository userRepository;
     private final PriorityRepo priorityRepo;
     private final CategoryRepo categoryRepo;
-    @Autowired
+     @Autowired
     public AdminService(OrganizationRepo organizationRepo, PasswordEncoder passwordEncoder, RoleRepo roleRepo, UserRepository userRepository, PriorityRepo priorityRepo, CategoryRepo categoryRepo) {
         this.organizationRepo = organizationRepo;
         this.passwordEncoder = passwordEncoder;
@@ -31,6 +35,7 @@ public class AdminService {
         this.priorityRepo = priorityRepo;
         this.categoryRepo = categoryRepo;
     }
+
 
     public ResponseEntity<Object> register(RegisterRequest registerRequest) {
         try {

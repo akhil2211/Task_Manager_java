@@ -30,7 +30,7 @@ public class AdminController {
     }
     @PostMapping("/register")
     public ResponseEntity<ResponseEntity<Object>> register (@RequestBody @Valid RegisterRequest registerRequest){
-        return ResponseEntity.ok(adminService.regist                                er(registerRequest));
+        return ResponseEntity.ok(adminService.register(registerRequest));
     }
     @PostMapping("/createOrganization")
     public ResponseEntity<String> createOrganziation(@RequestBody Map<String,String> orgRequest) {

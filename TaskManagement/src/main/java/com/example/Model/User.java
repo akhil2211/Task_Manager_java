@@ -2,8 +2,6 @@ package com.example.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,11 +10,11 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
-@Getter
-@Setter
+
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Data
+@Builder
 
 @Entity
 @Table(name="user")
