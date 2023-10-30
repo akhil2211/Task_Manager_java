@@ -72,12 +72,12 @@ public class AdminService {
         }
     }
 
-    public String createOrganization(Map<String, String> orgRequest) {
+    public ResponseEntity<Object> createOrganization(Map<String, String> orgRequest) {
         Organization organization = new Organization();
         organization.setOrg_name(orgRequest.get("org_name"));
         organization.setOrg_code(orgRequest.get("org_code"));
         organizationRepo.save(organization);
-        return "Organization Added";
+        return ResponseEntity.status(HttpStatus.CREATED).body("Organization Added");
     }
 
     public String createPriority(Map<String, String> priorityRequest) {

@@ -33,7 +33,7 @@ public class AdminController {
         return ResponseEntity.ok(adminService.register(registerRequest));
     }
     @PostMapping("/createOrganization")
-    public ResponseEntity<String> createOrganziation(@RequestBody Map<String,String> orgRequest) {
+    public ResponseEntity<ResponseEntity<Object>> createOrganziation(@RequestBody Map<String,String> orgRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createOrganization(orgRequest));
     }
     @PostMapping("/createPriority")

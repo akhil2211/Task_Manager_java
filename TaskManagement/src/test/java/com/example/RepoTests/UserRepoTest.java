@@ -1,7 +1,10 @@
 package com.example.RepoTests;
 
+import com.example.Model.Organization;
 import com.example.Model.RegisterRequest;
+import com.example.Model.Role;
 import com.example.Model.User;
+import com.example.Repository.RoleRepo;
 import com.example.Repository.UserRepository;
 import com.example.Service.AdminService;
 import org.assertj.core.api.Assertions;
@@ -20,26 +23,31 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UserRepoTest {
     @Autowired
     private UserRepository userRepository;
-
-
+    @Autowired
+    private RoleRepo roleRepo;
     @Test
     public void setRegTest(){
+        Role role= new Role();
+        role.setId(1);
+        Organization organization=new Organization();
+        organization.setId(1);
+
         User user= User.builder()
-                .firstname("Manu")
-                .lastname("M")
-                .username("manu")
-                .password("Manu@123")
-                .email("manu@gmail.com")
-                .role(null)
-                .organization(null)
+                .firstname("sdmnxz")
+                .lastname("Mvsdv")
+                .username("mansdvu")
+                .password("Manuvs@123")
+                .email("manvsvu@gmail.com")
+                .role(role)
+                .organization(organization)
                 .build();
 
-            userRepository.save(user);
-           Assertions.assertThat(user.getId()).isGreaterThan(0);
+        userRepository.save(user);
+        Assertions.assertThat(user.getId()).isGreaterThan(0);
     }
 
     @Test
-    public void getUserTest(){
+    public void getUserbyIdTest(){
         User user= userRepository.findById(1).get();
         Assertions.assertThat(user.getId()).isEqualTo(1);
     }
@@ -57,20 +65,29 @@ public class UserRepoTest {
     @Test
     public void saveDuplicateUserTest(){
 
+        Role role= new Role();
+        role.setId(2);
+        Organization organization=new Organization();
+        organization.setId(1);
+
         User user= User.builder()
                 .firstname("Mayu")
                 .lastname("M")
                 .username("mayu")
                 .password("Mayu@123")
                 .email("manu@gmai.com")
-                .role(null)
-                .organization(null)
+                .role(role)
+                .organization(organization)
                 .build();
         assertThrows(DataIntegrityViolationException.class,() -> userRepository.save(user));
     }
 
     @Test
     public void saveUniqueUserTest(){
+        Role role= new Role();
+        role.setId(3);
+        Organization organization=new Organization();
+        organization.setId(1);
 
         User user= User.builder()
                 .firstname("Karun")
@@ -78,13 +95,32 @@ public class UserRepoTest {
                 .username("karun")
                 .password("Karun@123")
                 .email("karun@gmai.com")
-                .role(null)
-                .organization(null)
+                .role(role)
+                .organization(organization)
                 .build();
         userRepository.save(user);
         Assertions.assertThat(user.getId()).isGreaterThan(0);
     }
-
+    @Test
+    public void existsByEmailTest() {
+        boolean exists = userRepository.existsByEmail("manu@gmail.com");
+        Assertions.assertThat(exists).isTrue();
     }
+    @Test
+    public void existsByUserNameTest() {
+        boolean exists = userRepository.existsByUsername("manu");
+        Assertions.assertThat(exists).isTrue();}
+    @Test
+    public void getbyOrgTest(){
+        List<User> users=userRepository.findByOrganization(1);
+        Assertions.assertThat(users.size()).isGreaterThan(0);
+    }
+
+    @Test
+    public void getUserRoleTest() {
+        String role = userRepository.getUserRole(1);
+        Assertions.assertThat(role).isNotNull();
+    }
+}
 
 
