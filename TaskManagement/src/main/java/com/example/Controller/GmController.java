@@ -15,7 +15,6 @@ import java.util.Map;
 @RequestMapping("/api/v1/gm")
 
 public class GmController {
-
     private final ProjectService projectService;
 
     private final GmService gmService;
@@ -27,7 +26,7 @@ public class GmController {
 
     @GetMapping("/projectList")
     public ResponseEntity<Iterable<Project>> getAllProjects() {
-        Iterable<Project> projects = projectService.getAllProjects();
+        Iterable<Project> projects = gmService.getAllProjects();
         return ResponseEntity.ok(projects);
     }
         @PostMapping("/{projectId}/assign")

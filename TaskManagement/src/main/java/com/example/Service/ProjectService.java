@@ -8,14 +8,10 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ProjectService {
     private final ProjectRepo projectRepo;
-
-
-
     private final ProjectUserRepo projectUserRepo;
 
     @Autowired
@@ -23,10 +19,6 @@ public class ProjectService {
         this.projectRepo = projectRepo;
         this.projectUserRepo = projectUserRepo;
     }
-
-    public Iterable<Project> getAllProjects() {
-            return projectRepo.findAll();
-        }
 
     public List<String> getUserByProject(Integer projectId) {
         return projectUserRepo.getProjectUsers(projectId);
@@ -38,7 +30,8 @@ public class ProjectService {
 
       public String editProjectStatus(Integer projectId, String newProjectStatus) {
         Project project= projectRepo.findById(projectId).orElse(null);
-        project.setProject_status(newProjectStatus);
+          assert project != null;
+          project.setProject_status(newProjectStatus);
         project.setModified_at(Timestamp.valueOf(LocalDateTime.now()));
         projectRepo.save(project);
         return "Project Status Changed";

@@ -1,7 +1,7 @@
 package com.example.Controller;
 
 
-import com.example.Authorization.AuthService;
+import com.example.Service.AuthService;
 import com.example.Authorization.AuthenticationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

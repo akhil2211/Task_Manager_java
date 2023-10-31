@@ -1,6 +1,6 @@
 package com.example.Controller;
 
-import com.example.Authorization.AuthService;
+import com.example.Service.AuthService;
 import com.example.Model.RegisterRequest;
 import com.example.Service.AdminService;
 import com.example.Service.UserService;

@@ -29,6 +29,25 @@ public class GmService {
         this.orgProjectRepo = orgProjectRepo;
         this.organizationRepo = organizationRepo;
     }
+    public String createProject(Project project, Integer orgId) {
+
+        Project projectdata=new Project();
+        projectdata.setProject_code(project.getProject_code());
+        projectdata.setProject_name(project.getProject_name());
+        projectdata.setProject_description(project.getProject_description());
+        projectdata.setProject_status(project.getProject_status());
+        projectdata.setCreated_at(Timestamp.valueOf(LocalDateTime.now()));
+        projectdata.setDue_date(project.getDue_date());
+
+        projectRepo.save(projectdata);
+        OrgProject orgProject=new OrgProject();
+        Organization organization=organizationRepo.findById(orgId).orElse(null);
+        orgProject.setOrg(organization);
+        orgProject.setProj(projectdata);
+        orgProjectRepo.save(orgProject);
+        return "Project Created Successfully";
+
+    }
 
 
     public String assignProject(Integer projectId, List<Integer> userIds) {
@@ -48,34 +67,14 @@ public class GmService {
                     projectUserRepo.save(projectUser);
                 }
             }
-                return " Project Assignment to Users Successful!";
+                return "Project Assignment to Users Successful!";
             }
         else{
                 return "No Project Found !";
             }
         }
-
     public Iterable<Project> getAllProjects() {
         return projectRepo.findAll();
-    }
-    public String createProject(Project project, Integer orgId) {
-
-        Project projectdata=new Project();
-        projectdata.setProject_code(project.getProject_code());
-        projectdata.setProject_name(project.getProject_name());
-        projectdata.setProject_description(project.getProject_description());
-        projectdata.setProject_status(project.getProject_status());
-        projectdata.setCreated_at(Timestamp.valueOf(LocalDateTime.now()));
-        projectdata.setDue_date(project.getDue_date());
-
-        projectRepo.save(projectdata);
-        OrgProject orgProject=new OrgProject();
-        Organization organization=organizationRepo.findById(orgId).orElse(null);
-        orgProject.setOrg(organization);
-        orgProject.setProj(projectdata);
-        orgProjectRepo.save(orgProject);
-        return "Project Created Successfully";
-
     }
 
     public List<Project> getProjectbyStatus(String projStatus) {

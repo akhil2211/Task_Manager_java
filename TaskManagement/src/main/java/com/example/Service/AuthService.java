@@ -1,5 +1,7 @@
-package com.example.Authorization;
+package com.example.Service;
 
+import com.example.Authorization.AuthenticationRequest;
+import com.example.Authorization.JwtService;
 import com.example.Model.*;
 import com.example.Repository.OrganizationRepo;
 import com.example.Repository.RoleRepo;
