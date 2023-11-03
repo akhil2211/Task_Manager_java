@@ -1,4 +1,5 @@
 package com.example.Service;
+import com.example.CustomContextHolder.ContextHolder;
 import com.example.Model.*;
 import com.example.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,8 @@ public class TaskService {
         this.userRepository = userRepository;
         this.taskPriorityRepo = taskPriorityRepo;
     }
-
     public String editTask(Integer newTaskId, Integer taskHolderId) {
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userDetails = ContextHolder.getContext();
         Integer currentUserId = userDetails.getId();
         String currentUserRole=userRepository.getUserRole(currentUserId);
         String userRole=userRepository.getUserRole(taskHolderId);
@@ -61,10 +61,8 @@ public class TaskService {
                 changeTaskHolder(newTaskId,taskHolderId);
             }
         }
-
-        return "Task Edited";
+        return "Task Holder Edited";
     }
-
     private void changeTaskHolder(Integer newTaskId, Integer taskHolderId) {
         Task task= taskRepo.findById(newTaskId).orElse(null);
         User user=userRepository.findById(taskHolderId).orElse(null);
@@ -79,7 +77,7 @@ public class TaskService {
     }
 
     public String createTask(TaskRequest task) {
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userDetails =ContextHolder.getContext();
         Integer currentUserId = userDetails.getId();
 
         String currentUserRole=userRepository.getUserRole(currentUserId);
@@ -159,13 +157,12 @@ public class TaskService {
     }
 
     public List<Task> getTaskbyAssignee() {
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer currentUserId = userDetails.getId();
-
+//        User userDetails = ContextHolder.getContext();
+        Integer currentUserId = ContextHolder.getContext().getId();
         return taskRepo.findByAssignee(currentUserId);
     }
     public List<Task> getTaskbyAssigned() {
-        User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userDetails =ContextHolder.getContext();
         Integer currentUserId = userDetails.getId();
         return taskRepo.findByAssigned(currentUserId);
     }

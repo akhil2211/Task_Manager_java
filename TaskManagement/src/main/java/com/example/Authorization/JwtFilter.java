@@ -1,6 +1,8 @@
 package com.example.Authorization;
 
+import com.example.CustomContextHolder.ContextHolder;
 import com.example.Repository.TokenRepo;
+import com.example.Repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +28,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
 @Autowired
 private TokenRepo tokenRepo;
+@Autowired
+private UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException
@@ -37,8 +41,8 @@ private TokenRepo tokenRepo;
        if(authHeader == null || !authHeader.startsWith("Bearer")){
            filterChain.doFilter(request,response);
            return;
-
        }
+
        jwtToken=authHeader.substring(7);
        UserName=jwtService.extractUsername(jwtToken);
        if(UserName!=null && SecurityContextHolder.getContext().getAuthentication()==null){
@@ -50,8 +54,15 @@ private TokenRepo tokenRepo;
                UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+               ContextHolder.setContext(userRepository.findByUsername(UserName).orElse(null));
            }
        }
-       filterChain.doFilter(request, response);
+       try{
+       filterChain.doFilter(request, response);}
+       finally
+           {
+               ContextHolder.clearContext();
+           }
+       }
     }
-}
+

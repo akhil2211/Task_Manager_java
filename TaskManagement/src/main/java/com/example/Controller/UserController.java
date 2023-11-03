@@ -1,5 +1,6 @@
 package com.example.Controller;
 
+import com.example.CustomContextHolder.ContextHolder;
 import com.example.Model.Project;
 import com.example.Model.Task;
 import com.example.Model.User;
@@ -32,8 +33,7 @@ public class UserController {
     }
     @GetMapping("/currentUserProfile")
     public ResponseEntity<User> getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User userDetails = (User) authentication.getPrincipal();
+        User userDetails = ContextHolder.getContext();
         Integer currentUserId = userDetails.getId();
         userDetails.setPassword("");
         return ResponseEntity.status(HttpStatus.OK).body(userDetails);
