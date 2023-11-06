@@ -1,6 +1,6 @@
 package com.example.ServiceTests;
 
-import com.example.CustomContextHolder.ContextHolder;
+import com.example.CustomContextHolder.AppContextHolder;
 import com.example.Model.*;
 import com.example.Repository.*;
 import com.example.Service.TaskService;
@@ -10,10 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.net.ContentHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -110,9 +107,9 @@ class TaskServiceTest {
                 .role(role)
                 .organization(organization)
                 .build();
-        MockedStatic securityContext=mockStatic(ContextHolder.class);
-        when(ContextHolder.getContext()).thenReturn(user1);
-        when(ContextHolder.getContext()).thenReturn(user2);
+        MockedStatic securityContext=mockStatic(AppContextHolder.class);
+        when(AppContextHolder.getUserId()).thenReturn(user1.getId());
+        when(AppContextHolder.getUserId()).thenReturn(user2.getId());
         when(userRepository.getUserRole(1)).thenReturn("GM");
         when(userRepository.getUserRole(2)).thenReturn("PM");
         when(projectRepo.findById(1)).thenReturn(Optional.of(new Project()));
@@ -179,8 +176,8 @@ class TaskServiceTest {
     @Test
     void testGetTaskbyAssignee() {
         User user1=new User();
-        MockedStatic securityContext=mockStatic(ContextHolder.class);
-        when(ContextHolder.getContext()).thenReturn(user1);
+        MockedStatic securityContext=mockStatic(AppContextHolder.class);
+        when(AppContextHolder.getUserId()).thenReturn(user1.getId());
         when(taskRepo.findByAssignee(1)).thenReturn(new ArrayList<>());
         List<Task> result = taskService.getTaskbyAssignee();
         assertEquals(new ArrayList<>(), result);
@@ -189,8 +186,8 @@ class TaskServiceTest {
     @Test
     void testGetTaskbyAssigned() {
         User user=new User();
-        MockedStatic securityContext=mockStatic(ContextHolder.class);
-        when(ContextHolder.getContext()).thenReturn(user);
+        MockedStatic securityContext=mockStatic(AppContextHolder.class);
+        when(AppContextHolder.getUserId()).thenReturn(user.getId());
         when(taskRepo.findByAssigned(1)).thenReturn(new ArrayList<>());
         List<Task> result = taskService.getTaskbyAssigned();
         assertEquals(new ArrayList<>(), result);

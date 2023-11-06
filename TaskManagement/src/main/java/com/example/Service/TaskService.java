@@ -1,16 +1,14 @@
 package com.example.Service;
-import com.example.CustomContextHolder.ContextHolder;
+import com.example.CustomContextHolder.AppContextHolder;
 import com.example.Model.*;
 import com.example.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TaskService {
@@ -43,8 +41,7 @@ public class TaskService {
         this.taskPriorityRepo = taskPriorityRepo;
     }
     public String editTask(Integer newTaskId, Integer taskHolderId) {
-        User userDetails = ContextHolder.getContext();
-        Integer currentUserId = userDetails.getId();
+        Integer currentUserId = AppContextHolder.getUserId();
         String currentUserRole=userRepository.getUserRole(currentUserId);
         String userRole=userRepository.getUserRole(taskHolderId);
         if(UserRoles.GM.toString().equals(currentUserRole)){
@@ -77,8 +74,7 @@ public class TaskService {
     }
 
     public String createTask(TaskRequest task) {
-        User userDetails =ContextHolder.getContext();
-        Integer currentUserId = userDetails.getId();
+        Integer currentUserId = AppContextHolder.getUserId();
 
         String currentUserRole=userRepository.getUserRole(currentUserId);
         String userRole=userRepository.getUserRole(task.getAssignedto());
@@ -157,13 +153,11 @@ public class TaskService {
     }
 
     public List<Task> getTaskbyAssignee() {
-//        User userDetails = ContextHolder.getContext();
-        Integer currentUserId = ContextHolder.getContext().getId();
+        Integer currentUserId = AppContextHolder.getUserId();
         return taskRepo.findByAssignee(currentUserId);
     }
     public List<Task> getTaskbyAssigned() {
-        User userDetails =ContextHolder.getContext();
-        Integer currentUserId = userDetails.getId();
+        Integer currentUserId = AppContextHolder.getUserId();
         return taskRepo.findByAssigned(currentUserId);
     }
 

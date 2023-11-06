@@ -1,6 +1,6 @@
 package com.example.Authorization;
 
-import com.example.CustomContextHolder.ContextHolder;
+import com.example.CustomContextHolder.AppContextHolder;
 import com.example.Repository.TokenRepo;
 import com.example.Repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -54,15 +54,12 @@ private UserRepository userRepository;
                UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-               ContextHolder.setContext(userRepository.findByUsername(UserName).orElse(null));
+               AppContextHolder.setUserId(AppContextHolder.getUserId());
            }
        }
-       try{
-       filterChain.doFilter(request, response);}
-       finally
-           {
-               ContextHolder.clearContext();
-           }
+
+       filterChain.doFilter(request, response);
+
        }
     }
 
