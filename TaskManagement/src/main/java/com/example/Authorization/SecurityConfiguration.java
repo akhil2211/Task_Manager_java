@@ -1,17 +1,26 @@
 package com.example.Authorization;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import static com.example.Model.Permission.*;
 import static com.example.Model.UserRoles.*;
@@ -62,8 +71,14 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout.addLogoutHandler(logoutHandler)
                         .logoutUrl("/api/v1/auth/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()))
-
+                        .logoutSuccessHandler(new LogoutSuccessHandler() {
+                            @Override
+                            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                                SecurityContextHolder.clearContext();
+                                response.setStatus(HttpURLConnection.HTTP_OK);
+                                response.getWriter().write("User Logged Out Succesfully !");
+                            }
+                        }))
                 ;
 
         return httpSecurity.build();
