@@ -49,18 +49,18 @@ public class TaskService {
             if(UserRoles.GM.toString().equals(userRole)|| UserRoles.ADMIN.toString().equals(userRole)){
                 return "GM Cannot assign task to GM or Admin !";
             }else {
-                changeTaskHolder(newTaskId,taskHolderId);
+                return changeTaskHolder(newTaskId,taskHolderId);
             }
         }else{
             if(UserRoles.PM.toString().equals(userRole) || UserRoles.GM.toString().equals(userRole) || UserRoles.ADMIN.toString().equals(userRole)){
                 return "PM Cannot assign task to GM or Admin !";
             }else{
-                changeTaskHolder(newTaskId,taskHolderId);
+                return changeTaskHolder(newTaskId,taskHolderId);
             }
         }
-        return "Task Holder Edited";
+
     }
-    private void changeTaskHolder(Integer newTaskId, Integer taskHolderId) {
+    private String changeTaskHolder(Integer newTaskId, Integer taskHolderId) {
         Task task= taskRepo.findById(newTaskId).orElse(null);
         User user=userRepository.findById(taskHolderId).orElse(null);
         TaskHistory taskHistory=new TaskHistory();
@@ -71,6 +71,7 @@ public class TaskService {
         taskHistoryRepo.save(taskHistory);
         assignment.setAssigned_to(user);
         assignmentRepo.save(assignment);
+        return "Task Holder Edited";
     }
 
     public String createTask(TaskRequest task) {
@@ -95,7 +96,7 @@ public class TaskService {
         return "Task Created Successfully";
     }
 
-    private void makeTask(TaskRequest task, Integer currentUserId) {
+    public void makeTask(TaskRequest task, Integer currentUserId) {
         Task taskdata = new Task();
         taskdata.setT_code(task.getT_code());
         taskdata.setT_title(task.getT_title());

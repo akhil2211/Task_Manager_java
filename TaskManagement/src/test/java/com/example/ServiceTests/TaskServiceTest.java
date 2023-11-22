@@ -9,8 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+
 class TaskServiceTest {
 
     @Mock
@@ -77,47 +78,35 @@ class TaskServiceTest {
         taskRequest.setAssignedto(2);
         taskRequest.setC_id(1);
         taskRequest.setPriority_id(1);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testCreateTask() {
-        Role role1= new Role();
-        role1.setId(2);
-        Organization organization1=new Organization();
-        organization1.setId(1);
-        User user1= User.builder()
-                .firstname("Karun")
-                .lastname("M")
-                .username("karun")
-                .password("Karun@123")
-                .email("karun@gmail.com")
-                .role(role1)
-                .organization(organization1)
-                .build();
-        Role role= new Role();
-        role.setId(3);
-        Organization organization=new Organization();
-        organization.setId(1);
-        User user2= User.builder()
-                .firstname("Akhil")
-                .lastname("Nair")
-                .username("akhil")
-                .password("Akhil@123")
-                .email("akhil@gmail.com")
-                .role(role)
-                .organization(organization)
-                .build();
-        MockedStatic securityContext=mockStatic(AppContextHolder.class);
-        when(AppContextHolder.getUserId()).thenReturn(user1.getId());
-        when(AppContextHolder.getUserId()).thenReturn(user2.getId());
-        when(userRepository.getUserRole(1)).thenReturn("GM");
-        when(userRepository.getUserRole(2)).thenReturn("PM");
-        when(projectRepo.findById(1)).thenReturn(Optional.of(new Project()));
-        when(userRepository.findById(1)).thenReturn(Optional.of(user1));
-        when(userRepository.findById(2)).thenReturn(Optional.of(user2));
-        String result = taskService.createTask(taskRequest);
-        assertEquals("Task Created Successfully", result);
+    void testMakeTask() {
+
+        TaskRequest taskRequest = new TaskRequest();
+        taskRequest.setT_code("T01");
+        taskRequest.setT_title("Task");
+        taskRequest.setT_description("Task Desc");
+        taskRequest.setDuedate(new Date(2023,12,8));
+        taskRequest.setT_status("Ongoing");
+        taskRequest.setProject_id(1);
+        taskRequest.setC_id(1);
+        taskRequest.setPriority_id(1);
+        taskRequest.setAssignedto(4);
+
+        when(projectRepo.findById(taskRequest.getProject_id())).thenReturn(Optional.of(new Project()));
+        when(userRepository.findById(taskRequest.getAssignedto())).thenReturn(Optional.of(new User()));
+        when(userRepository.findById(1)).thenReturn(Optional.of(new User()));
+
+        taskService.makeTask(taskRequest, 1);
+
+        verify(taskRepo, times(1)).save(any(Task.class));
+        verify(assignmentRepo, times(1)).save(any(Assignment.class));
+        verify(taskCategoryRepo, times(1)).save(any(TaskCategory.class));
+        verify(taskPriorityRepo, times(1)).save(any(TaskPriority.class));
     }
+
 
     @Test
     void testGetAllTasks() {
@@ -130,9 +119,12 @@ class TaskServiceTest {
 
     @Test
     void testEditTask() {
+
         when(userRepository.getUserRole(1)).thenReturn("GM");
         when(userRepository.getUserRole(2)).thenReturn("Developer");
         when(taskRepo.findById(1)).thenReturn(Optional.of(task));
+        when(userRepository.findById(2)).thenReturn(Optional.of(new User()));
+        when(assignmentRepo.findAssignmentByTask(1)).thenReturn(Optional.of(new Assignment()));
 
         String result = taskService.editTask(1, 2);
         assertEquals("Task Holder Edited", result);
@@ -176,21 +168,23 @@ class TaskServiceTest {
     @Test
     void testGetTaskbyAssignee() {
         User user1=new User();
-        MockedStatic securityContext=mockStatic(AppContextHolder.class);
+        MockedStatic<AppContextHolder> securityContext=mockStatic(AppContextHolder.class);
         when(AppContextHolder.getUserId()).thenReturn(user1.getId());
         when(taskRepo.findByAssignee(1)).thenReturn(new ArrayList<>());
         List<Task> result = taskService.getTaskbyAssignee();
         assertEquals(new ArrayList<>(), result);
     }
 
+
     @Test
     void testGetTaskbyAssigned() {
-        User user=new User();
-        MockedStatic securityContext=mockStatic(AppContextHolder.class);
-        when(AppContextHolder.getUserId()).thenReturn(user.getId());
-        when(taskRepo.findByAssigned(1)).thenReturn(new ArrayList<>());
-        List<Task> result = taskService.getTaskbyAssigned();
-        assertEquals(new ArrayList<>(), result);
+        User user = new User();
+        try (MockedStatic mocked = mockStatic(AppContextHolder.class)) {
+            when(AppContextHolder.getUserId()).thenReturn(user.getId());
+            when(taskRepo.findByAssigned(1)).thenReturn(new ArrayList<>());
+            List<Task> result = taskService.getTaskbyAssigned();
+            assertEquals(new ArrayList<>(), result);
+        }
     }
 
     @Test

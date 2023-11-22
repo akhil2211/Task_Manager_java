@@ -81,7 +81,7 @@ public class AdminControllerTest {
 
         when(adminService.createPriority(any())).thenReturn("Priority created");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/createPriority")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/admin/createPriority")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(priorityRequest)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
