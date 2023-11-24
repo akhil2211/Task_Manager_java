@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 
@@ -66,7 +68,7 @@ public class AuthService {
         tokenRepo.saveAll(validToken);
     }
 
-    public String authenticate(AuthenticationRequest registerRequest) {
+    public Object authenticate(AuthenticationRequest registerRequest) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -79,10 +81,16 @@ public class AuthService {
             var jwtToken = jwtService.generateToken(user);
             revokeAllTokens(user);
             saveUserToken(user,jwtToken);
-            return jwtToken;
+            Map<String,String> res=new HashMap<>();
+            res.put("response",jwtToken);
+            res.put("status","True");
+            return res;
         }
         catch(AuthenticationException e){
-            return "Username or Password does not Match";
+            Map<String,String> res=new HashMap<>();
+            res.put("response","Username Or Password does not match!");
+            res.put("status","False");
+            return res;
         }
                }
 }
