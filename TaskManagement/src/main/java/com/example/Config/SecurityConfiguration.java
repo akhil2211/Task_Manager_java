@@ -1,5 +1,6 @@
-package com.example.Authorization;
+package com.example.Config;
 
+import com.example.Authorization.JwtFilter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,7 +33,7 @@ import static com.example.Model.UserRoles.*;
 
 public class SecurityConfiguration {
     @Autowired
-    private  JwtFilter jwtAuthFilter;
+    private JwtFilter jwtAuthFilter;
     @Autowired
     private AuthenticationProvider authenticationProvider;
     @Autowired
@@ -39,6 +41,7 @@ public class SecurityConfiguration {
 @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .cors(Customizer.withDefaults())
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers("/api/v1/auth/**").permitAll()

@@ -17,7 +17,7 @@ public class AppContextHolder {
         }
         public static void setUserId(Integer userId) {
             Map<String,Object> appcontext=contextHolder.get();
-            appcontext.put(String.valueOf(ID),userId);
+            appcontext.put(ID,userId);
         }
         public static void clearContext() {
             contextHolder.remove();

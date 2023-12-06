@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 public class RegisterRequest {
 
     @StringValid
-    @FieldLengthValid
     @NotBlank(message = "Empty field!")
     private String firstname;
 
