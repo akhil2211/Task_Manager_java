@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -171,7 +172,7 @@ class TaskServiceTest {
         MockedStatic<AppContextHolder> securityContext=mockStatic(AppContextHolder.class);
         when(AppContextHolder.getUserId()).thenReturn(user1.getId());
         when(taskRepo.findByAssignee(1)).thenReturn(new ArrayList<>());
-        List<Task> result = taskService.getTaskbyAssignee();
+        List<Map<String,Object>> result = taskService.getTaskbyAssignee();
         assertEquals(new ArrayList<>(), result);
     }
 

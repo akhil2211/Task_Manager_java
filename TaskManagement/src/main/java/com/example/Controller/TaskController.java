@@ -54,7 +54,7 @@ public class TaskController {
         return new ResponseEntity<>(taskService.getTaskbyStatus(t_status),HttpStatus.OK);
     }
     @GetMapping("/AssignedTasks")
-    public ResponseEntity<List<Task>> getTaskbyAssignee() {
+    public ResponseEntity<List<Map<String,Object>>> getTaskbyAssignee() {
         return new ResponseEntity<>(taskService.getTaskbyAssignee(),HttpStatus.OK);
     }
     @GetMapping("/MyTasks")

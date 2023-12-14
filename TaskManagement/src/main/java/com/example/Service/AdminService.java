@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -63,6 +64,11 @@ public class AdminService {
             user.setRole(role);
             Organization organization = organizationRepo.findById(Integer.valueOf(registerRequest.getOrgId())).orElse(null);
             user.setOrganization(organization);
+            if(registerRequest.getReporting_officer_id()!=null){
+            User reporting_officer=userRepository.findById((registerRequest.getReporting_officer_id())).orElse(null);
+            if(reporting_officer!=null){
+            user.setReporting_Officer(reporting_officer);}
+            }
 
             var savedUser = userRepository.save(user);
             return ResponseEntity.ok(savedUser);
@@ -92,4 +98,5 @@ public class AdminService {
         categoryRepo.save(category);
         return "Task Category Created !";
     }
+
 }

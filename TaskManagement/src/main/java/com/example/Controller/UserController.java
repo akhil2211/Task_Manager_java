@@ -3,6 +3,7 @@ package com.example.Controller;
 import com.example.CustomContextHolder.AppContextHolder;
 import com.example.Model.User;
 import com.example.Repository.UserRepository;
+import com.example.Service.AdminService;
 import com.example.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,13 @@ import java.util.Optional;
 
 public class UserController {
     private final UserService userService;
+    private final AdminService adminService;
     @Autowired
     private  UserRepository userRepository;
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AdminService adminService) {
         this.userService = userService;
+        this.adminService = adminService;
     }
 
     @GetMapping("/profile/{user_id}")
@@ -59,6 +62,10 @@ public class UserController {
     @GetMapping("/organization/{organization_id}")
     public ResponseEntity<List<User>> findByOrganization(@PathVariable Integer organization_id) {
         return new ResponseEntity<>(userService.getUserByOrganization(organization_id), HttpStatus.OK);
+    }
+    @GetMapping("/team")
+    public ResponseEntity<List<User>> findByReportingOfficer( ){
+        return new ResponseEntity<>(userService.getUserByReportingOfficer(),HttpStatus.OK);
     }
 
 

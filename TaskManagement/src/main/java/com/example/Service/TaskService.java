@@ -9,11 +9,12 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TaskService {
     private final TaskRepo taskRepo;
-       private final TaskHistoryRepo taskHistoryRepo;
+    private final TaskHistoryRepo taskHistoryRepo;
 
     private final CategoryRepo categoryRepo;
 
@@ -153,7 +154,7 @@ public class TaskService {
         return taskRepo.findByTaskStatus(tStatus);
     }
 
-    public List<Task> getTaskbyAssignee() {
+    public List<Map<String,Object>> getTaskbyAssignee() {
         Integer currentUserId = AppContextHolder.getUserId();
         return taskRepo.findByAssignee(currentUserId);
     }

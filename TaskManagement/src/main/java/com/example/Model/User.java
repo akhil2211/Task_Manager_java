@@ -48,6 +48,10 @@ public class User implements UserDetails
     private Timestamp modified_at;
 
     @ManyToOne
+    @JoinColumn(name="Reporting_Officer_id")
+    private User Reporting_Officer;
+
+    @ManyToOne
     @JoinColumn(name="org_id")
     private Organization organization;
 

@@ -45,4 +45,6 @@ public class RegisterRequest {
     @Numeric
     private String roleId;
 
+    private Integer reporting_officer_id;
+
 }

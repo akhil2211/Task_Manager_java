@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 public class TaskRepoTest {
@@ -34,7 +35,7 @@ public class TaskRepoTest {
     }
     @Test
     public void getByAssigneeTest(){
-      List<Task> task=taskRepo.findByAssignee(2);
+      List<Map<String,Object>> task=taskRepo.findByAssignee(2);
       Assertions.assertThat(task.size()).isGreaterThan(0);}
 
       @Test

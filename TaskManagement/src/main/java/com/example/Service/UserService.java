@@ -1,6 +1,7 @@
 package com.example.Service;
 
 
+import com.example.CustomContextHolder.AppContextHolder;
 import com.example.Model.Task;
 import com.example.Model.User;
 import com.example.Repository.UserRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -35,5 +37,10 @@ public class UserService {
         user.setPassword("");
         return user;
 
+    }
+    public List<User> getUserByReportingOfficer() {
+        Integer currentUserId = AppContextHolder.getUserId();
+        Optional<User> userDetails=userRepo.findById(currentUserId);
+        return userRepo.findByReportingOfficer(userDetails.get().getId());
     }
 }
