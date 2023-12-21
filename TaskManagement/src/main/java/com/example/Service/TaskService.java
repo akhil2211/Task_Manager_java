@@ -171,4 +171,9 @@ public class TaskService {
         return "Task Status Changed";
     }
 
-}
+    public List<Map<String,Object>> searchTask(String taskName) {
+        Integer currentUserId = AppContextHolder.getUserId();
+        return taskRepo.searchTaskByName(currentUserId,taskName);
+        }
+    }
+

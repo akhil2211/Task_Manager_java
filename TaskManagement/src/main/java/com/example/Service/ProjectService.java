@@ -28,14 +28,17 @@ public class ProjectService {
         return projectRepo.getProjectById(projectId);
     }
 
-      public String editProjectStatus(Integer projectId, String newProjectStatus) {
+    public String editProjectStatus(Integer projectId, String newProjectStatus) {
         Project project= projectRepo.findById(projectId).orElse(null);
           assert project != null;
           project.setProject_status(newProjectStatus);
         project.setModified_at(Timestamp.valueOf(LocalDateTime.now()));
         projectRepo.save(project);
         return "Project Status Changed";
-
     }
+    public List<Project> searchProject(String projectName) {
+        return projectRepo.searchProjectByName(projectName);
+    }
+
 }
 

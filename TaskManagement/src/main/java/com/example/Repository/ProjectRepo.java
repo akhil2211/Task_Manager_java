@@ -17,4 +17,7 @@ public interface ProjectRepo extends JpaRepository<Project,Integer> {
 
     @Query(value = "select* from project where project_status=? order by created_at DESC", nativeQuery = true)
     List<Project> findByProjectStatus(String projStatus);
+     @Query(value="select * from project where project_name  LIKE CONCAT('%',?,'%');",nativeQuery = true )
+     List<Project> searchProjectByName(String projectName);
+
 }

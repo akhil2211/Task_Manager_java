@@ -37,6 +37,10 @@ public class ProjectController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/searchProject")
+    public ResponseEntity<List<Project>> searchProjectByName(@RequestParam("project") String projectName) {
+        return new ResponseEntity<>(projectService.searchProject(projectName),HttpStatus.OK);
+    }
     @GetMapping("{projectId}/userlist")
     public ResponseEntity<List<String>> findByProject(@PathVariable Integer projectId) {
         return new ResponseEntity<>(projectService.getUserByProject(projectId), HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.example.Controller;
 
+import com.example.Model.Project;
 import com.example.Model.Task;
 import com.example.Model.TaskRequest;
 import com.example.Service.TaskService;
@@ -61,7 +62,10 @@ public class TaskController {
     public ResponseEntity<List<Task>> getTaskbyAssigned() {
         return new ResponseEntity<>(taskService.getTaskbyAssigned(),HttpStatus.OK);
     }
-
+    @GetMapping("/searchTask")
+    public ResponseEntity<List<Map<String,Object>>> searchTaskByName(@RequestParam("task") String taskName) {
+        return new ResponseEntity<>(taskService.searchTask(taskName),HttpStatus.OK);
+    }
     @GetMapping("/{taskId}/taskHistory")
     public ResponseEntity<List<String>> getTaskHistory(@PathVariable Integer taskId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.getTaskHistory(taskId));
